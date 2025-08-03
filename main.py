@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QPushButton, QFileDialog, QLabel, QScrollArea, QGridLayout, QStatusBar
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,QStatusBar,
+    QPushButton, QFileDialog, QLabel, QScrollArea, QGridLayout
 )
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
@@ -73,7 +73,7 @@ QPushButton[class="dangerButton"]:hover {
 class ImageToPDFApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Multi-Image to PDF Converter")
+        self.setWindowTitle("Image to PDF Converter")
         self.setGeometry(100, 100, 850, 700)
         self.images_data = []
         self.init_ui()
@@ -81,7 +81,7 @@ class ImageToPDFApp(QMainWindow):
 
     def init_ui(self):
         self.status_bar = self.statusBar()
-        self.status_bar.showMessage("Ready | Created by: Dorsa Ghane")
+        self.status_bar.showMessage("Ready | Created by: Dorsa")
 
         main_widget = QWidget()
         main_layout = QVBoxLayout(main_widget)
@@ -208,16 +208,40 @@ class ImageToPDFApp(QMainWindow):
                 save_path += '.pdf'
 
             try:
-                images_to_save = []
-                for data in self.images_data:
-                    img = data['image']
-                    if img.mode in ('RGBA', 'P'):
-                        img = img.convert('RGB')
-                    images_to_save.append(img)
+                A4_WIDTH_PX = 2480
+                A4_HEIGHT_PX = 3508
                 
-                if images_to_save:
-                    images_to_save[0].save(
-                        save_path, save_all=True, append_images=images_to_save[1:]
+                final_pages = []
+                
+                for data in self.images_data:
+                    user_img = data['image']
+                    if user_img.mode in ('RGBA', 'P'):
+                        user_img = user_img.convert('RGB')
+
+                    a4_page = Image.new('RGB', (A4_WIDTH_PX, A4_HEIGHT_PX), 'white')
+
+                    original_width, original_height = user_img.size
+                    aspect_ratio = original_height / original_width
+                    
+                    new_width = A4_WIDTH_PX
+                    new_height = int(new_width * aspect_ratio)
+
+                    if new_height > A4_HEIGHT_PX:
+                        new_height = A4_HEIGHT_PX
+                        new_width = int(new_height / aspect_ratio)
+
+                    resized_img = user_img.resize((new_width, new_height), Image.LANCZOS)
+                    
+                    paste_x = (A4_WIDTH_PX - new_width) // 2
+                    paste_y = (A4_HEIGHT_PX - new_height) // 2
+                    
+                    a4_page.paste(resized_img, (paste_x, paste_y))
+                    
+                    final_pages.append(a4_page)
+
+                if final_pages:
+                    final_pages[0].save(
+                        save_path, save_all=True, append_images=final_pages[1:]
                     )
                     print(f"PDF file successfully saved to {save_path}")
 
