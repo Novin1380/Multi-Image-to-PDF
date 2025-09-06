@@ -10,10 +10,6 @@
 - [Demo](#-demo)
 - [Features](#-features)
 - [Setup](#-setup)
-- [Getting Ready](#-getting-ready)
-- [Screenshots](#-screenshots)
-- [Reformat and Check](#-reformat-and-check)
-- [Todo](#-todo)
 - [Bugs or Opinion](#-bugs-or-opinion)
 
 ---
