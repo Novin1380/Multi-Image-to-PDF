@@ -1,5 +1,5 @@
-# Image-to-PDF Converter
-<h1 align="center">🖼️➡️📄 Image to PDF Converter</h1> 
+
+<h2 align="center">🖼️➡️📄 Image to PDF Converter</h2> 
 <h4 align="center">A modern PySide6 desktop application that allows you to upload, edit, and convert images into a high-quality PDF file. Built with <strong>Python, PySide6, and Pillow</strong>.</h4>
 
 ---
